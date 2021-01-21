@@ -10,6 +10,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String searchHint;
   final AppBarController appBarController;
   final Function(String search) onChange;
+  final Function(String search) onSubmitt;
   final double searchFontSize;
 
   SearchAppBar({
@@ -20,7 +21,8 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.searchHint = "Search here...",
     @required this.mainAppBar,
     @required this.appBarController,
-    @required this.onChange,
+    this.onChange,
+    this.onSubmitt,
     this.searchFontSize = 20,
   });
 
@@ -74,6 +76,9 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
           autofocus: true,
           onChanged: (String value) {
             onChange(value);
+          },
+          onSubmitted: (String value) {
+            onSubmitt(value);
           },
           style: TextStyle(
             fontSize: searchFontSize,
