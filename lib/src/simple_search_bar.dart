@@ -21,7 +21,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.searchHint = "Search here...",
     @required this.mainAppBar,
     @required this.appBarController,
-    this.onChange,
+    @required this.onChange,
     this.onSubmit,
     this.searchFontSize = 20,
   });
@@ -68,6 +68,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
         onTap: () {
           appBarController.stream.add(false);
           onChange('');
+          onSubmit('');
         },
       ),
       backgroundColor: primary,
