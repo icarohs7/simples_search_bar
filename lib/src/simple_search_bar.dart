@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'app_bar_controller.dart';
 
 class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final Color statusBarColor;
+  final Color? statusBarColor;
   final Color primary;
   final bool autoSelected;
   final AppBar mainAppBar;
@@ -10,18 +10,18 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String searchHint;
   final AppBarController appBarController;
   final Function(String search) onChange;
-  final Function(String search) onSubmit;
+  final Function(String search)? onSubmit;
   final double searchFontSize;
 
   SearchAppBar({
-    @required this.primary,
+    required this.primary,
     this.mainTextColor = Colors.white,
     this.statusBarColor,
     this.autoSelected = false,
     this.searchHint = "Search here...",
-    @required this.mainAppBar,
-    @required this.appBarController,
-    @required this.onChange,
+    required this.mainAppBar,
+    required this.appBarController,
+    required this.onChange,
     this.onSubmit,
     this.searchFontSize = 20,
   });
@@ -40,7 +40,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
         bool _show = autoSelected;
 
         if (snap.hasData) {
-          _show = snap.data;
+          _show = snap.data ?? _show;
         }
 
         if (_show) {
@@ -58,7 +58,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
     return mainAppBar;
   }
 
-  Widget searchAppBar({@required BuildContext context}) {
+  Widget searchAppBar({required BuildContext context}) {
     return AppBar(
       leading: InkWell(
         child: Icon(
@@ -68,7 +68,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
         onTap: () {
           appBarController.stream.add(false);
           onChange('');
-          onSubmit('');
+          onSubmit?.call('');
         },
       ),
       backgroundColor: primary,
@@ -79,7 +79,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
             onChange(value);
           },
           onSubmitted: (String value) {
-            onSubmit(value);
+            onSubmit?.call(value);
           },
           style: TextStyle(
             fontSize: searchFontSize,
