@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'app_bar_controller.dart';
+
+import 'search_app_bar_controller.dart';
 
 class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color? statusBarColor;
-  final Color primary;
-  final bool autoSelected;
+  final Color? primary;
   final AppBar mainAppBar;
-  final Color mainTextColor;
+  final Color? mainTextColor;
   final String searchHint;
-  final AppBarController appBarController;
+  final SearchAppBarController appBarController;
   final Function(String search) onChange;
   final Function(String search)? onSubmit;
   final double searchFontSize;
 
   SearchAppBar({
-    required this.primary,
-    this.mainTextColor = Colors.white,
+    this.primary,
+    this.mainTextColor,
     this.statusBarColor,
-    this.autoSelected = false,
     this.searchHint = "Search here...",
     required this.mainAppBar,
     required this.appBarController,
@@ -27,36 +26,18 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
-  Size get preferredSize {
-    return Size.fromHeight(60.0);
-  }
+  Size get preferredSize => Size.fromHeight(60.0);
 
   Widget build(BuildContext context) {
-    // appBarController.stream.add(autoSelected);
-
-    return StreamBuilder(
-      stream: appBarController.stream.stream,
-      builder: (BuildContext context, AsyncSnapshot<bool> snap) {
-        bool _show = autoSelected;
-
-        if (snap.hasData) {
-          _show = snap.data ?? _show;
-        }
-
-        if (_show) {
-          return searchAppBar(
-            context: context,
-          );
-        } else {
-          return showMainAppBar();
-        }
+    return ValueListenableBuilder<bool>(
+      valueListenable: appBarController.isOpen,
+      builder: (context, isOpen, child) {
+        return isOpen ? searchAppBar(context: context) : showMainAppBar();
       },
     );
   }
 
-  Widget showMainAppBar() {
-    return mainAppBar;
-  }
+  Widget showMainAppBar() => mainAppBar;
 
   Widget searchAppBar({required BuildContext context}) {
     return AppBar(
@@ -66,7 +47,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: mainTextColor,
         ),
         onTap: () {
-          appBarController.stream.add(false);
+          appBarController.isOpen.value = false;
           onChange('');
           onSubmit?.call('');
         },
@@ -75,12 +56,8 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Container(
         child: TextField(
           autofocus: true,
-          onChanged: (String value) {
-            onChange(value);
-          },
-          onSubmitted: (String value) {
-            onSubmit?.call(value);
-          },
+          onChanged: onChange,
+          onSubmitted: onSubmit,
           style: TextStyle(
             fontSize: searchFontSize,
             color: mainTextColor,
@@ -90,11 +67,11 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
             hintText: searchHint,
             border: InputBorder.none,
             hintStyle: TextStyle(
-              color: mainTextColor.withAlpha(100),
+              color: mainTextColor?.withAlpha(100),
             ),
             suffixIcon: Icon(
               Icons.search,
-              color: mainTextColor.withAlpha(100),
+              color: mainTextColor?.withAlpha(100),
             ),
           ),
         ),

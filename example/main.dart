@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:simple_search_bar/simple_search_bar.dart';
 
-class MySearchBar extends StatelessWidget{
-
-  final AppBarController appBarController = AppBarController();
+class MySearchBar extends StatelessWidget {
+  // You could load the bar with search already active
+  final SearchAppBarController appBarController = SearchAppBarController(true);
 
   @override
   Widget build(BuildContext context) {
@@ -11,8 +11,6 @@ class MySearchBar extends StatelessWidget{
       appBar: SearchAppBar(
         primary: Theme.of(context).primaryColor,
         appBarController: appBarController,
-        // You could load the bar with search already active
-        autoSelected: true,
         searchHint: "Pesquise aqui...",
         mainTextColor: Colors.white,
         onChange: (String value) {
@@ -21,7 +19,7 @@ class MySearchBar extends StatelessWidget{
         },
         //Will show when SEARCH MODE wasn't active
         mainAppBar: AppBar(
-          title: Text("Yout Bar Title"),
+          title: Text('Your Bar Title'),
           actions: <Widget>[
             InkWell(
               child: Icon(
@@ -30,7 +28,7 @@ class MySearchBar extends StatelessWidget{
               onTap: () {
                 //This is where You change to SEARCH MODE. To hide, just
                 //add FALSE as value on the stream
-                appBarController.stream.add(true);
+                appBarController.isOpen.value = true;
               },
             ),
           ],
@@ -38,6 +36,5 @@ class MySearchBar extends StatelessWidget{
       ),
       body: Container(),
     );
-
   }
 }
